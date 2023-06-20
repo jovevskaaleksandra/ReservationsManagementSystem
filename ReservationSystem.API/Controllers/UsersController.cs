@@ -43,7 +43,7 @@ namespace ReservationSystem.API.Controllers
             return Ok(user);
         }
 
-        [HttpPost()]
+        [HttpPost("edit")]
         public IActionResult EditUser(int userId, string firstName, string lastName, string username, string password, string email)
         {
             var parameters = new[]
@@ -70,6 +70,28 @@ namespace ReservationSystem.API.Controllers
 
             return Ok();
         }
+
+
+        // this method doesn't work 
+        [HttpPost("register")]
+        public IActionResult InsertUser(string firstName, string lastName, string username, string password, string email, int roleId)
+        {
+
+            var parameters = new[]
+            {
+                new NpgsqlParameter("@p_firstname", NpgsqlDbType.Varchar) { Value = firstName },
+                new NpgsqlParameter("@p_lastname", NpgsqlDbType.Varchar) { Value = lastName },
+                new NpgsqlParameter("@p_username", NpgsqlDbType.Varchar) { Value = username },
+                new NpgsqlParameter("@p_password", NpgsqlDbType.Varchar) { Value = password },
+                new NpgsqlParameter("@p_email", NpgsqlDbType.Varchar) { Value = email },
+                new NpgsqlParameter("@p_roleid", NpgsqlDbType.Integer) { Value = roleId },
+            };
+
+            var result =  _context.Users.FromSqlRaw("SELECT insert_user(@p_firstname, @p_lastname, @p_username, @p_password, @p_email, @p_roleid)", parameters).FirstOrDefault();
+
+            return Ok(result);
+        }
+
 
 
     }
