@@ -34,11 +34,11 @@ namespace ReservationSystem.API.Controllers
             return Ok(reservations);
         }
 
-        //this method doesn't work or test again
+       
         [HttpGet("report")]
         public IActionResult GenerateReservationReport()
         {
-            var result = _context.Database.ExecuteSqlRaw("SELECT * FROM generate_reservation_report()");
+            var result = _context.Reservations.FromSql($"select * from public.generate_reservation_report() limit 5").ToList();
 
             return Ok(result);
         }
